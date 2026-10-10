@@ -89,48 +89,42 @@ st_folium(
 )
 
 
+
 # Plan route
 if st.sidebar.button("🚓 Plan Patrol Route"):
 
     if len(required) == 0:
-
-        st.warning(
-            "Please select at least one monitoring location."
-        )
+        st.warning("Please select at least one monitoring location.")
 
     else:
         # Calculate normal route
         original_route, original_distance = patrol_planner(
-            graph,
-            start,
-            required
+            graph, start, required
         )
 
         # Remove blocked trail
         blocked_graph = remove_blocked_trail(
-            graph,
-            blocked_trail
+            graph, blocked_trail
         )
 
         # Calculate new route
         route, distance = patrol_planner(
-            blocked_graph,
-            start,
-            required
+            blocked_graph, start, required
         )
 
         st.session_state["route"] = route
         st.session_state["distance"] = distance
         st.session_state["original_distance"] = original_distance
         st.session_state["blocked_trail"] = blocked_trail
-    if st.sidebar.button("🔄 Reset Route"):
 
-        st.session_state["route"] = None
-        st.session_state["distance"] = None
-        st.session_state["original_distance"] = None
-        st.session_state["blocked_trail"] = "None"
 
-    st.experimental_rerun()
+# Reset route (separate button)
+if st.sidebar.button("🔄 Reset Route"):
+    st.session_state["route"] = None
+    st.session_state["distance"] = None
+    st.session_state["original_distance"] = None
+    st.session_state["blocked_trail"] = "None"
+    st.rerun()
 
 # Display route
 if st.session_state["route"] is not None:
